@@ -1,0 +1,49 @@
+# Example configuration for eth0.100 interface on a generic four node cluster
+
+global:
+    vlan: 100
+
+
+templates: !include templates.yaml
+
+
+tables:
+    10000:
+        primary ifname: b10000
+        subnet: 1.1.0.0/24
+        default gateway: 1.1.0.254
+    10001:
+        primary ifname: b10001
+        subnet: 1.2.0.0/24
+        default gateway: 1.2.0.254
+    10002:
+        primary ifname: b10002
+        subnet: 2.0.0.0/20
+        default gateway: 2.0.15.254
+
+hosts:
+    node1.example.com:
+        device: eth0.100
+        addresses:
+            b10000: 1.1.0.250
+            b10001: 1.2.0.250
+            b10002: 2.0.15.250
+    node2.example.com:
+        device: eth0.100
+        addresses:
+            b10000: 1.1.0.251
+            b10001: 1.2.0.251
+            b10002: 2.0.15.251
+    node3.example.com:
+        device: eth0.100
+        addresses:
+            b10000: 1.1.0.252
+            b10001: 1.2.0.252
+            b10002: 2.0.15.252
+    node4.example.com:
+        device: eth0.100
+        addresses:
+            b10000: 1.1.0.253
+            b10001: 1.2.0.253
+            b10002: 2.0.15.253
+

@@ -1,0 +1,42 @@
+# Standard templates for network configuration files
+
+
+device:
+  filename: ifcfg-{{ device }}
+  content: |+
+    DEVICE={{ device }}
+    BOOTPROTO={% if bootproto is defined %}{{ bootproto }}{% else %}none{% endif %}
+    ONBOOT={% if onboot is defined %}{{ onboot }}{% else %}yes{% endif %}
+    VLAN={% if vlan is none %}no{% else %}yes{% endif %}
+    USERCTL={% if userctl is defined %}{{ userctl }}{% else %}yes{% endif %}
+
+
+route:
+  filename: route-{{ device }}
+  content: |
+    {% for table in tables -%}
+    {{ table.subnet }} dev {{ table.device }} table {{ table.table }}
+    default via {{ table.gateway }} table {{ table.table }}
+    {% endfor %}
+
+
+rule:
+  filename: rule-{{ device }}
+  content: |
+    {% for table in tables -%}
+    from {{ table.subnet }} table {{ table.table }}
+    {% endfor %}
+
+
+interface:
+  filename: ifcfg-{{ device }}:{{ ifname }}
+  content: |+
+    DEVICE={{ device }}:{{ ifname }}
+    BOOTPROTO={% if bootproto is defined %}{{ bootproto }}{% else %}static{% endif %}
+    ONBOOT={% if onboot is defined %}{{ onboot }}{% else %}yes{% endif %}
+    IPADDR={{ address }}
+    NETMASK={{ netmask }}
+    NETWORK={{ network_address }}
+    VLAN={% if vlan is none %}no{% else %}yes{% endif %}
+    USERCTL={% if userctl is defined %}{{ userctl }}{% else %}yes{% endif %}
+
